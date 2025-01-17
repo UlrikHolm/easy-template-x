@@ -11,6 +11,10 @@ export interface ImageContent extends PluginContent {
     width: number;
     height: number;
     /**
+     * Optional. A value bewteen 0 and 360. If this is not set the image will not be rotated.
+     */
+    rotation?: number;
+    /**
      * Optional. If this is not set the image will be marked as "decorative".
      */
     altText?: string;

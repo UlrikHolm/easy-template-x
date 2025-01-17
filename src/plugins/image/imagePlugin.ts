@@ -132,7 +132,7 @@ export class ImagePlugin extends TemplatePlugin {
                     </a:stretch>
                 </pic:blipFill>
                 <pic:spPr bwMode="auto">
-                    <a:xfrm>
+                    <a:xfrm ${this.rotationMarkup(content.rotation)}>
                         <a:off x="0" y="0"/>
                         <a:ext cx="${this.pixelsToEmu(content.width)}" cy="${this.pixelsToEmu(content.height)}"/>
                     </a:xfrm>
@@ -160,6 +160,25 @@ export class ImagePlugin extends TemplatePlugin {
         return `<a:alphaModFix amt="${alpha}" />`;
     }
 
+    private rotationMarkup (rotation: number) {
+        if (rotation === 0 || rotation === 360 || rotation === null || rotation === undefined) {
+            return '';
+        }
+        if (rotation < 0 || rotation > 360){
+            throw new ArgumentError(`Rotation must be between 0 and 360, but was ${rotation}.`)
+        }
+
+        return `rot="${this.degreesToRotation(rotation)}"`
+    }
+
+    private degreesToRotation(degrees: number): number {
+
+        // https://stackoverflow.com/questions/12085076/how-to-calculate-the-rotation-value-for-the-ms-office-powerpoint-shapes-from-the
+        // http://officeopenxml.com/drwSp-rotate.php
+
+        return degrees*60_000;
+    }
+
     private pixelsToEmu(pixels: number): number {
 
         // https://stackoverflow.com/questions/20194403/openxml-distance-size-units
@@ -169,4 +188,6 @@ export class ImagePlugin extends TemplatePlugin {
 
         return Math.round(pixels * 9525);
     }
+
+
 }
